@@ -737,13 +737,13 @@
       }
     },
     {
-      "id": "chipped_sickle_clean",
+      "id": "sickle_clean",
       "category": "item",
       "tier": "standard",
       "floor": 2,
       "method": "bitforge",
-      "nameKo": "이가 나간 낫 · 청소 완료",
-      "prompt": "cleaned curved sickle blade with a notch missing, wooden handle, no dirt, item icon, plain background",
+      "nameKo": "낫 · 청소 완료",
+      "prompt": "A cleaned curved sickle blade with a smooth crescent shape and a plain wooden handle, no dirt on it, item icon, plain background",
       "size": {
         "width": 72,
         "height": 72
@@ -754,7 +754,7 @@
       "detail": "medium detail",
       "styleStrength": 50,
       "derive": {
-        "dirtyVariant": "chipped_sickle_dirty",
+        "dirtyVariant": "sickle_dirty",
         "grimeColor": "rust"
       }
     }
