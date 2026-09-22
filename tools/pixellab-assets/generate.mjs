@@ -94,12 +94,28 @@ function selectAssets(manifest, args) {
     }
     return found;
   }
-  if (args.tier === "all") return manifest.assets.slice();
+  // "animation" tier는 애니메이션 호출(프레임당 과금, 정적 이미지보다 훨씬 비쌈)이라
+  // core/standard/optional/all 누적 범위에 절대 섞이지 않습니다. --tier=animation 이나
+  // --only=로 명시했을 때만 선택됩니다.
+  if (args.tier === "animation") {
+    return manifest.assets.filter((a) => a.tier === "animation");
+  }
+  if (args.tier === "all") {
+    return manifest.assets.filter((a) => a.tier !== "animation");
+  }
   const rank = TIER_RANK[args.tier];
   if (rank === undefined) {
-    throw new Error(`알 수 없는 --tier=${args.tier} (core|standard|optional|all 중 하나여야 합니다)`);
+    throw new Error(`알 수 없는 --tier=${args.tier} (core|standard|optional|all|animation 중 하나여야 합니다)`);
   }
   return manifest.assets.filter((a) => TIER_RANK[a.tier] <= rank);
+}
+
+// method: "animate" 에셋은 이미 생성된 정적 이미지를 참조(reference_image)로 삼아
+// 그 캐릭터/아이템이 움직이는 프레임들을 뽑습니다. 반드시 참조 이미지가 먼저 있어야 합니다.
+function resolveReferenceImage(asset, outDir) {
+  const ref = asset.referenceAsset;
+  if (!ref) throw new Error(`${asset.id}: method가 animate인데 referenceAsset 이 지정되지 않았습니다.`);
+  return path.join(outDir, ref.category, `${ref.id}.png`);
 }
 
 function resolveStyleRef(asset, args) {
@@ -126,9 +142,16 @@ async function main() {
 
   console.log(`\n=== 생성 계획 ===`);
   console.log(`선택 기준: ${args.only ? `--only=${args.only.join(",")}` : `--tier=${args.tier}`}`);
-  console.log(`총 ${selected.length}회 API 호출 예정 (pixflux ${byMethod.pixflux || 0}개, bitforge ${byMethod.bitforge || 0}개)`);
+  console.log(
+    `총 ${selected.length}회 API 호출 예정 (pixflux ${byMethod.pixflux || 0}개, bitforge ${byMethod.bitforge || 0}개, animate ${byMethod.animate || 0}개)`
+  );
   for (const a of selected) {
-    console.log(`  · [${a.tier}/${a.method}] ${a.id} (${a.nameKo}) ${a.size.width}x${a.size.height}`);
+    const sizeLabel = `${a.size.width}x${a.size.height}`;
+    const extra = a.method === "animate" ? `, ${a.frames}프레임, 참조=${a.referenceAsset?.id}` : "";
+    console.log(`  · [${a.tier}/${a.method}] ${a.id} (${a.nameKo}) ${sizeLabel}${extra}`);
+  }
+  if (byMethod.animate) {
+    console.log(`\n⚠️ animate 호출은 프레임 수만큼 과금되어 정적 이미지 1장보다 훨씬 비쌉니다. 먼저 --only= 로 1개만 테스트해보는 걸 권장합니다.`);
   }
   console.log(`\n※ 정확한 크레딧 차감량은 계정/모델별로 다를 수 있습니다. 실행 전 'npm run balance' 로 잔액을 꼭 확인하세요.`);
   console.log(`※ 이번 실행은 usage.usd 누적 $${args.maxUsd.toFixed(2)} 도달 시 자동 중단됩니다 (--max-usd= 로 조정 가능).\n`);
@@ -173,7 +196,11 @@ async function main() {
         noBackground: true,
       };
 
+      const categoryDir = path.join(outDir, asset.category);
+      await fs.mkdir(categoryDir, { recursive: true });
+
       let response;
+      let usd;
       if (asset.method === "bitforge") {
         const styleImage = await Base64Image.fromFile(resolveStyleRef(asset, args));
         response = await client.generateImageBitforge({
@@ -181,18 +208,46 @@ async function main() {
           styleImage,
           styleStrength: asset.styleStrength ?? 50,
         });
+        const outPath = path.join(categoryDir, `${asset.id}.png`);
+        await response.image.saveToFile(outPath);
+        usd = response.usage?.usd ?? 0;
+        console.log(`완료 ($${usd.toFixed(4)}, 누적 $${(spentUsd + usd).toFixed(4)}) → ${path.relative(process.cwd(), outPath)}`);
+      } else if (asset.method === "animate") {
+        const referenceImagePath = resolveReferenceImage(asset, outDir);
+        try {
+          await fs.access(referenceImagePath);
+        } catch {
+          throw new Error(`참조 이미지가 없습니다: ${path.relative(process.cwd(), referenceImagePath)} (먼저 '${asset.referenceAsset.id}' 를 생성하세요)`);
+        }
+        const referenceImage = await Base64Image.fromFile(referenceImagePath);
+        response = await client.animateWithText({
+          description: asset.prompt,
+          action: asset.action,
+          imageSize: asset.size,
+          referenceImage,
+          view: asset.view,
+          direction: asset.direction || "south",
+          negativeDescription,
+          nFrames: asset.frames ?? 4,
+        });
+        usd = response.usage?.usd ?? 0;
+        const savedPaths = [];
+        for (let i = 0; i < response.images.length; i++) {
+          const outPath = path.join(categoryDir, `${asset.id}_${String(i + 1).padStart(2, "0")}.png`);
+          await response.images[i].saveToFile(outPath);
+          savedPaths.push(path.relative(process.cwd(), outPath));
+        }
+        console.log(`완료 (${response.images.length}프레임, $${usd.toFixed(4)}, 누적 $${(spentUsd + usd).toFixed(4)})`);
+        for (const p of savedPaths) console.log(`    → ${p}`);
       } else {
         response = await client.generateImagePixflux(common);
+        const outPath = path.join(categoryDir, `${asset.id}.png`);
+        await response.image.saveToFile(outPath);
+        usd = response.usage?.usd ?? 0;
+        console.log(`완료 ($${usd.toFixed(4)}, 누적 $${(spentUsd + usd).toFixed(4)}) → ${path.relative(process.cwd(), outPath)}`);
       }
 
-      const categoryDir = path.join(outDir, asset.category);
-      await fs.mkdir(categoryDir, { recursive: true });
-      const outPath = path.join(categoryDir, `${asset.id}.png`);
-      await response.image.saveToFile(outPath);
-
-      const usd = response.usage?.usd ?? 0;
       spentUsd += usd;
-      console.log(`완료 ($${usd.toFixed(4)}, 누적 $${spentUsd.toFixed(4)}) → ${path.relative(process.cwd(), outPath)}`);
       results.push({ id: asset.id, ok: true, usd });
     } catch (err) {
       if (err instanceof AuthenticationError) {

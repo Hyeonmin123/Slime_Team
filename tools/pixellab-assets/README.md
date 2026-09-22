@@ -27,8 +27,33 @@
 | `core` | 8 | bitforge | 슬라임 캐릭터 4종 + 아이템 "청소 완료" 실루엣 4종. 게임의 핵심 비주얼이라 스타일 참조(bitforge)로 품질을 확보. |
 | `standard` | +15 | pixflux 9 / bitforge 6 | 재화·아이콘 9종(간단한 아이콘이라 저비용 pixflux), 환경/UI 기준본 6종 |
 | `optional` | +7 | pixflux | 부수적 환경 소품(횃불, 통, 뼈, 거미줄 등). 없어도 플레이에 지장 없음 |
+| `animation` | +7 | animate 2 / pixflux 5 | 슬라임 소화 모션 + 흡수 이펙트. 아래 "모션·이펙트" 참고. **`--tier=all`에도 포함되지 않고 명시적으로만 실행됩니다** (animate 호출이 훨씬 비쌈) |
 
-`--tier=all` 이 아니면 위 티어를 넘어서는 호출은 발생하지 않습니다.
+`--tier=all`은 core+standard+optional까지만 포함합니다. `animation`은 별도로 `--tier=animation` 또는 `--only=`로만 실행됩니다.
+
+## 모션·이펙트 (핵심 퀄리티업)
+
+정적 이미지만으로는 "슬라임이 아이템을 삼키는" 임팩트가 안 살아서, PixelLab의 `animate-with-text` 엔드포인트로 실제 모션을 뽑습니다. 이 엔드포인트는 **이미 만든 정적 이미지 하나를 참조(reference)로 주고, 그 캐릭터/사물이 텍스트로 설명한 동작을 하는 프레임들**을 생성합니다 — 그래서 참조로 쓸 정적 이미지(`slime_cleaning`, `rusty_sword_clean`)가 core tier로 먼저 있어야 합니다.
+
+| id | 내용 | 프레임 | 참조 이미지 |
+|---|---|---|---|
+| `slime_digest` | 슬라임이 배를 부풀리며 무기를 통째로 삼키는 모션 | 6 | `slime_cleaning` |
+| `item_absorb_dissolve` | 아이템이 가라앉으며 반짝이는 입자로 녹아 사라짐 | 4 | `rusty_sword_clean` |
+| `fx_absorb_ring_1~3` | 흡수 링이 넓게 퍼졌다가 수축해 사라지는 3단계 (정적 pixflux, 저비용) | - | - |
+| `fx_burp_sparkle_1~2` | 삼킨 직후 만족스러운 반짝임 2단계 (정적 pixflux, 저비용) | - | - |
+
+**스타일 일관성을 위해 한 것:**
+- `description` 필드를 참조 이미지 생성 때 썼던 프롬프트와 **동일하게** 맞춰서 텍스트-이미지 설명 불일치를 없앴습니다.
+- 캐릭터/아이템의 실제 형태는 `referenceImage`가 앵커 역할을 해서, bitforge의 style-reference보다 훨씬 강하게 원본과 일치시킵니다.
+- 이펙트 3종(`fx_absorb_ring_*`)은 애니메이션 엔드포인트 대신 저비용 정적 pixflux 3장으로 "단계"를 나눠 흉내냈습니다 — 링이 좁아지는 걸 텍스트로 단계별로 명시(넓고 흐림 → 수축 중 → 붕괴 직전)해서 애니메이션 호출 없이도 순차 재생하면 비슷한 효과를 냅니다.
+
+```bash
+node generate.mjs --dry-run --tier=animation      # 계획 확인 (무료)
+node generate.mjs --only=slime_digest --yes        # 가장 비싼 항목부터 1개만 테스트 권장
+node generate.mjs --tier=animation --yes           # 문제 없으면 나머지 6개까지
+```
+
+`slime_digest`, `item_absorb_dissolve`는 여러 프레임을 한 번에 뽑기 때문에 정적 이미지 1장보다 확실히 비쌉니다. **`--only=slime_digest` 로 딱 1개만 먼저 뽑아서 결과와 비용을 확인한 뒤** 나머지를 진행하는 걸 권장합니다.
 
 ## 설치
 
@@ -97,7 +122,7 @@ node generate.mjs --only=slime_idle,slime_cleaning --yes
 tools/pixellab-assets/
 ├── manifest.json        # 생성할 에셋 목록 (tier/method/프롬프트/사이즈 등)
 ├── palette.json          # 보드에서 옮겨 적은 색상값 (근사치, 재확인 권장) + 리컬러 프리셋
-├── generate.mjs          # PixelLab API 호출 (유료, tier 기반 안전장치 포함)
+├── generate.mjs          # PixelLab API 호출 (pixflux/bitforge/animate, 유료, tier 기반 안전장치 포함)
 ├── checkBalance.mjs      # 잔액 조회 (무료)
 ├── recolor.mjs           # 색상 배리에이션 로컬 생성 (무료)
 ├── grime.mjs             # '오염' 상태 로컬 생성 (무료)

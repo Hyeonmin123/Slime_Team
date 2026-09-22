@@ -525,6 +525,125 @@
       "outline": "single color black outline",
       "shading": "flat shading",
       "detail": "low detail"
+    },
+    {
+      "id": "slime_digest",
+      "category": "character",
+      "tier": "animation",
+      "method": "animate",
+      "nameKo": "청소 슬라임 · 소화 모션 (핵심)",
+      "prompt": "cute round green jelly slime creature, dungeon janitor, big glossy eyes, side view",
+      "action": "belly stretches wide and bulges as it gulps the weapon down whole, body jiggling side to side, mouth closing shut with one final satisfied wobble",
+      "referenceAsset": {
+        "category": "character",
+        "id": "slime_cleaning"
+      },
+      "size": {
+        "width": 32,
+        "height": 32
+      },
+      "view": "side",
+      "frames": 6
+    },
+    {
+      "id": "item_absorb_dissolve",
+      "category": "item",
+      "tier": "animation",
+      "method": "animate",
+      "nameKo": "아이템 흡수 · 용해 애니메이션",
+      "prompt": "clean shiny steel short sword, simple silhouette, item icon, plain background",
+      "action": "item sinks straight downward and dissolves into small glowing green particles, shrinking and fading away completely",
+      "referenceAsset": {
+        "category": "item",
+        "id": "rusty_sword_clean"
+      },
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "frames": 4
+    },
+    {
+      "id": "fx_absorb_ring_1",
+      "category": "effect",
+      "tier": "animation",
+      "method": "pixflux",
+      "nameKo": "흡수 링 이펙트 1/3 (넓고 흐림)",
+      "prompt": "thin glowing green ring effect, wide and faint, radiating outward, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "lineless",
+      "shading": "flat shading",
+      "detail": "low detail"
+    },
+    {
+      "id": "fx_absorb_ring_2",
+      "category": "effect",
+      "tier": "animation",
+      "method": "pixflux",
+      "nameKo": "흡수 링 이펙트 2/3 (수축 중)",
+      "prompt": "glowing green ring effect, medium size, brighter, shrinking inward, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "lineless",
+      "shading": "flat shading",
+      "detail": "low detail"
+    },
+    {
+      "id": "fx_absorb_ring_3",
+      "category": "effect",
+      "tier": "animation",
+      "method": "pixflux",
+      "nameKo": "흡수 링 이펙트 3/3 (붕괴 직전)",
+      "prompt": "small bright glowing green dot, ring fully collapsed, about to vanish in a flash, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "lineless",
+      "shading": "flat shading",
+      "detail": "low detail"
+    },
+    {
+      "id": "fx_burp_sparkle_1",
+      "category": "effect",
+      "tier": "animation",
+      "method": "pixflux",
+      "nameKo": "삼킨 후 만족 반짝임 1/2 (작게)",
+      "prompt": "small burst of white sparkle motion lines, subtle satisfied pop effect, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "lineless",
+      "shading": "flat shading",
+      "detail": "low detail"
+    },
+    {
+      "id": "fx_burp_sparkle_2",
+      "category": "effect",
+      "tier": "animation",
+      "method": "pixflux",
+      "nameKo": "삼킨 후 만족 반짝임 2/2 (크게 퍼짐)",
+      "prompt": "bigger burst of white sparkle stars fading outward, satisfied pop effect, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "lineless",
+      "shading": "flat shading",
+      "detail": "low detail"
     }
-  ]
+  ],
+  "$note_animation_ko": "tier: 'animation' 항목은 정적 이미지가 아니라 PixelLab의 animate-with-text 엔드포인트를 씁니다. 이미 만든 정적 이미지(referenceAsset)를 기준으로 그 캐릭터/아이템이 움직이는 프레임을 뽑습니다. 프레임 수만큼 과금되어 기존 정적 이미지 1장보다 훨씬 비싸므로 core/standard/optional/all 어디에도 섞이지 않고, --tier=animation 이나 --only= 로 명시했을 때만 실행됩니다. 먼저 해당 referenceAsset(slime_cleaning, rusty_sword_clean)이 core tier로 생성되어 있어야 합니다."
 }
