@@ -89,7 +89,8 @@
       "derive": {
         "dirtyVariant": "rusty_sword_dirty",
         "grimeColor": "rust"
-      }
+      },
+      "floor": 1
     },
     {
       "id": "old_shield_clean",
@@ -110,7 +111,8 @@
       "derive": {
         "dirtyVariant": "old_shield_dirty",
         "grimeColor": "moss"
-      }
+      },
+      "floor": 1
     },
     {
       "id": "broken_spear_clean",
@@ -131,7 +133,8 @@
       "derive": {
         "dirtyVariant": "broken_spear_dirty",
         "grimeColor": "moss"
-      }
+      },
+      "floor": 1
     },
     {
       "id": "chipped_axe_clean",
@@ -152,7 +155,8 @@
       "derive": {
         "dirtyVariant": "chipped_axe_dirty",
         "grimeColor": "rust"
-      }
+      },
+      "floor": 1
     },
     {
       "id": "gold_coin",
@@ -643,6 +647,116 @@
       "outline": "lineless",
       "shading": "flat shading",
       "detail": "low detail"
+    },
+    {
+      "id": "rusty_dagger_clean",
+      "category": "item",
+      "tier": "standard",
+      "floor": 2,
+      "method": "bitforge",
+      "nameKo": "녹슨 단검 · 청소 완료",
+      "prompt": "clean sharp steel dagger, simple silhouette, item icon, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50,
+      "derive": {
+        "dirtyVariant": "rusty_dagger_dirty",
+        "grimeColor": "rust"
+      }
+    },
+    {
+      "id": "cracked_club_clean",
+      "category": "item",
+      "tier": "standard",
+      "floor": 2,
+      "method": "bitforge",
+      "nameKo": "금 간 곤봉 · 청소 완료",
+      "prompt": "cleaned wooden club with a thick knotted head, item icon, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50,
+      "derive": {
+        "dirtyVariant": "cracked_club_dirty",
+        "grimeColor": "moss"
+      }
+    },
+    {
+      "id": "broken_bow_clean",
+      "category": "item",
+      "tier": "standard",
+      "floor": 2,
+      "method": "bitforge",
+      "nameKo": "부서진 활 · 청소 완료",
+      "prompt": "cleaned wooden hunting bow with a snapped string, still broken but no dirt, item icon, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50,
+      "derive": {
+        "dirtyVariant": "broken_bow_dirty",
+        "grimeColor": "moss"
+      }
+    },
+    {
+      "id": "rusty_chain_flail_clean",
+      "category": "item",
+      "tier": "standard",
+      "floor": 2,
+      "method": "bitforge",
+      "nameKo": "녹슨 사슬 도리깨 · 청소 완료",
+      "prompt": "clean iron flail with a spiked ball on a short chain, item icon, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50,
+      "derive": {
+        "dirtyVariant": "rusty_chain_flail_dirty",
+        "grimeColor": "rust"
+      }
+    },
+    {
+      "id": "chipped_sickle_clean",
+      "category": "item",
+      "tier": "standard",
+      "floor": 2,
+      "method": "bitforge",
+      "nameKo": "이가 나간 낫 · 청소 완료",
+      "prompt": "cleaned curved sickle blade with a notch missing, wooden handle, no dirt, item icon, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50,
+      "derive": {
+        "dirtyVariant": "chipped_sickle_dirty",
+        "grimeColor": "rust"
+      }
     }
   ],
   "$note_animation_ko": "tier: 'animation' 항목은 정적 이미지가 아니라 PixelLab의 animate-with-text 엔드포인트를 씁니다. 이미 만든 정적 이미지(referenceAsset)를 기준으로 그 캐릭터/아이템이 움직이는 프레임을 뽑습니다. 프레임 수만큼 과금되어 기존 정적 이미지 1장보다 훨씬 비싸므로 core/standard/optional/all 어디에도 섞이지 않고, --tier=animation 이나 --only= 로 명시했을 때만 실행됩니다. 먼저 해당 referenceAsset(slime_cleaning, rusty_sword_clean)이 core tier로 생성되어 있어야 합니다."
