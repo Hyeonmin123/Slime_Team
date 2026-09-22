@@ -1,0 +1,20 @@
+{
+  "name": "slime-pixellab-assets",
+  "private": true,
+  "version": "1.0.0",
+  "description": "던전 청소부 슬라임군 - 픽셀 아트 에셋 보드 스타일 기준 PixelLab API 연동 스크립트 (크레딧 절약 우선 설계)",
+  "type": "module",
+  "scripts": {
+    "balance": "node checkBalance.mjs",
+    "dry-run": "node generate.mjs --dry-run",
+    "generate": "node generate.mjs",
+    "recolor": "node recolor.mjs",
+    "grime": "node grime.mjs",
+    "tile-variants": "node tile-variants.mjs"
+  },
+  "dependencies": {
+    "@pixellab-code/pixellab": "^1.0.2",
+    "dotenv": "^16.4.5",
+    "pngjs": "^7.0.0"
+  }
+}

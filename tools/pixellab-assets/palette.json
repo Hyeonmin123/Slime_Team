@@ -1,0 +1,35 @@
+{
+  "$note_ko": "픽셀 에셋 보드 이미지에서 육안으로 옮겨 적은 값입니다. 실제 색보정 전에 반드시 원본 보드 이미지를 스포이드(컬러피커)로 재확인하세요.",
+  "base": {
+    "outline": "#1A1020",
+    "stone": "#2C2127",
+    "stoneLight": "#403C45",
+    "parchment": "#EAD79B",
+    "wood": "#9A8236"
+  },
+  "material": {
+    "slime": "#4FA33A",
+    "slimeLight": "#7FD84A",
+    "carry": "#2F86C4",
+    "gold": "#F2C23A",
+    "core": "#4FD0EA"
+  },
+  "grade": {
+    "normal": "#CFC8B6",
+    "rare": "#3088FF",
+    "epic": "#A75CF0",
+    "unique": "#F2C23A",
+    "legendary": "#FF4D4D"
+  },
+  "button": {
+    "green": "#4CAF50",
+    "brown": "#B97A3E",
+    "red": "#D6423A",
+    "disabledGray": "#6B6570",
+    "disabledDark": "#39343E"
+  },
+  "grime": {
+    "rust": "#7A4A2E",
+    "moss": "#4E5B32"
+  }
+}

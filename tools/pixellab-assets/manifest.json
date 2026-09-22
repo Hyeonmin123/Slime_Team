@@ -1,0 +1,530 @@
+{
+  "$note_ko": "크레딧 절약 설계. 기본 실행(npm run generate)은 tier=core만 호출합니다. standard/optional은 명시적으로 --tier 를 올려야 호출됩니다. 색상 배리에이션(등급 배지, 버튼 상태, 무기 프레임)과 아이템 '오염' 상태는 API를 다시 부르지 않고 recolor.mjs / grime.mjs 로 로컬에서 무료로 파생시킵니다.",
+  "negativePromptDefault": "blurry, smooth gradient, anti-aliasing, 3d render, photorealistic, text, watermark, extra limbs, deformed, low contrast",
+  "assets": [
+    {
+      "id": "slime_idle",
+      "category": "character",
+      "tier": "core",
+      "method": "bitforge",
+      "nameKo": "청소 슬라임 · 대기",
+      "prompt": "cute round green jelly slime creature, dungeon janitor, big glossy eyes, simple idle standing pose, side view",
+      "size": {
+        "width": 32,
+        "height": 32
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50
+    },
+    {
+      "id": "slime_cleaning",
+      "category": "character",
+      "tier": "core",
+      "method": "bitforge",
+      "nameKo": "청소 슬라임 · 청소 중",
+      "prompt": "cute round green jelly slime creature scrubbing dirt with tiny arms, soap bubbles, side view, action pose",
+      "size": {
+        "width": 32,
+        "height": 32
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50
+    },
+    {
+      "id": "carry_slime_idle",
+      "category": "character",
+      "tier": "core",
+      "method": "bitforge",
+      "nameKo": "운반 슬라임 · 대기",
+      "prompt": "cute round blue jelly slime creature with a small sack on its back, idle standing pose, side view",
+      "size": {
+        "width": 32,
+        "height": 32
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50
+    },
+    {
+      "id": "carry_slime_carrying",
+      "category": "character",
+      "tier": "core",
+      "method": "bitforge",
+      "nameKo": "운반 슬라임 · 운반 중",
+      "prompt": "cute round blue jelly slime creature straining while carrying a heavy sack, walking pose, side view",
+      "size": {
+        "width": 32,
+        "height": 32
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50
+    },
+    {
+      "id": "rusty_sword_clean",
+      "category": "item",
+      "tier": "core",
+      "method": "bitforge",
+      "nameKo": "녹슨 검 · 청소 완료",
+      "prompt": "clean shiny steel short sword, simple silhouette, item icon, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50,
+      "derive": {
+        "dirtyVariant": "rusty_sword_dirty",
+        "grimeColor": "rust"
+      }
+    },
+    {
+      "id": "old_shield_clean",
+      "category": "item",
+      "tier": "core",
+      "method": "bitforge",
+      "nameKo": "낡은 방패 · 청소 완료",
+      "prompt": "clean polished round wooden shield with a metal rim, item icon, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50,
+      "derive": {
+        "dirtyVariant": "old_shield_dirty",
+        "grimeColor": "moss"
+      }
+    },
+    {
+      "id": "broken_spear_clean",
+      "category": "item",
+      "tier": "core",
+      "method": "bitforge",
+      "nameKo": "부러진 창 · 청소 완료",
+      "prompt": "cleaned wooden spear with a snapped broken tip, still broken but no dirt, item icon, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50,
+      "derive": {
+        "dirtyVariant": "broken_spear_dirty",
+        "grimeColor": "moss"
+      }
+    },
+    {
+      "id": "chipped_axe_clean",
+      "category": "item",
+      "tier": "core",
+      "method": "bitforge",
+      "nameKo": "이 빠진 도끼 · 청소 완료",
+      "prompt": "cleaned hand axe with a chipped notch in the blade, no dirt, item icon, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50,
+      "derive": {
+        "dirtyVariant": "chipped_axe_dirty",
+        "grimeColor": "rust"
+      }
+    },
+    {
+      "id": "gold_coin",
+      "category": "currency",
+      "tier": "standard",
+      "method": "pixflux",
+      "nameKo": "골드",
+      "prompt": "shiny gold coin icon, currency, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail"
+    },
+    {
+      "id": "core_gem",
+      "category": "currency",
+      "tier": "standard",
+      "method": "pixflux",
+      "nameKo": "코어",
+      "prompt": "glowing blue crystal core gem icon, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail"
+    },
+    {
+      "id": "storage_chest",
+      "category": "currency",
+      "tier": "standard",
+      "method": "pixflux",
+      "nameKo": "저장소",
+      "prompt": "small wooden treasure chest icon, closed, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail"
+    },
+    {
+      "id": "bestiary_book",
+      "category": "currency",
+      "tier": "standard",
+      "method": "pixflux",
+      "nameKo": "도감",
+      "prompt": "closed red leather bestiary book icon with a gold emblem, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail"
+    },
+    {
+      "id": "growth_tree",
+      "category": "currency",
+      "tier": "standard",
+      "method": "pixflux",
+      "nameKo": "성장의 나무",
+      "prompt": "small stylized green tree icon symbolizing a skill tree, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail"
+    },
+    {
+      "id": "hourglass",
+      "category": "currency",
+      "tier": "standard",
+      "method": "pixflux",
+      "nameKo": "한 시간",
+      "prompt": "small wooden hourglass icon with sand falling, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail"
+    },
+    {
+      "id": "grade_star",
+      "category": "currency",
+      "tier": "standard",
+      "method": "pixflux",
+      "nameKo": "등급 별",
+      "prompt": "simple flat five-pointed star badge icon, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "flat shading",
+      "detail": "low detail",
+      "derive": {
+        "recolorPreset": "grade"
+      }
+    },
+    {
+      "id": "lock_icon",
+      "category": "currency",
+      "tier": "standard",
+      "method": "pixflux",
+      "nameKo": "잠김",
+      "prompt": "small closed padlock icon, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail"
+    },
+    {
+      "id": "sparkle_fx",
+      "category": "ui",
+      "tier": "standard",
+      "method": "pixflux",
+      "nameKo": "반짝임 FX",
+      "prompt": "small four-point sparkle shine effect, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "lineless",
+      "shading": "flat shading",
+      "detail": "low detail"
+    },
+    {
+      "id": "floor_tile_base",
+      "category": "environment",
+      "tier": "standard",
+      "method": "bitforge",
+      "nameKo": "바닥 타일 A (기준)",
+      "prompt": "seamless stone dungeon floor tile, top-down, plain worn texture",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "high top-down",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50,
+      "derive": {
+        "tileVariants": [
+          "floor_tile_b",
+          "floor_tile_c"
+        ]
+      }
+    },
+    {
+      "id": "wall_brick",
+      "category": "environment",
+      "tier": "standard",
+      "method": "bitforge",
+      "nameKo": "벽돌 벽면",
+      "prompt": "seamless dark brick dungeon wall tile, front view",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50
+    },
+    {
+      "id": "summon_magic_circle",
+      "category": "environment",
+      "tier": "standard",
+      "method": "bitforge",
+      "nameKo": "소환 마법진",
+      "prompt": "glowing purple magic summoning circle, top-down, dungeon rune pattern",
+      "size": {
+        "width": 32,
+        "height": 32
+      },
+      "view": "high top-down",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail",
+      "styleStrength": 50
+    },
+    {
+      "id": "panel_stone_base",
+      "category": "ui",
+      "tier": "standard",
+      "method": "bitforge",
+      "nameKo": "스톤 패널 (기준 텍스처)",
+      "prompt": "dark stone UI panel background texture, seamless, flat",
+      "size": {
+        "width": 32,
+        "height": 32
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "flat shading",
+      "detail": "low detail",
+      "styleStrength": 45
+    },
+    {
+      "id": "button_summon_base",
+      "category": "ui",
+      "tier": "standard",
+      "method": "bitforge",
+      "nameKo": "소환 버튼 (기준)",
+      "prompt": "small rounded rectangle game UI button, flat green fill, pixel art, plain background",
+      "size": {
+        "width": 32,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "flat shading",
+      "detail": "low detail",
+      "styleStrength": 45,
+      "derive": {
+        "recolorPreset": "button"
+      }
+    },
+    {
+      "id": "weapon_frame_base",
+      "category": "ui",
+      "tier": "standard",
+      "method": "pixflux",
+      "nameKo": "무기 등급 프레임 (기준)",
+      "prompt": "small square icon frame border, flat grey, pixel art, plain background",
+      "size": {
+        "width": 20,
+        "height": 20
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "flat shading",
+      "detail": "low detail",
+      "derive": {
+        "recolorPreset": "grade"
+      }
+    },
+    {
+      "id": "wall_three_side",
+      "category": "environment",
+      "tier": "optional",
+      "method": "pixflux",
+      "nameKo": "벽 삼면",
+      "prompt": "stone dungeon corner wall showing three sides, top-down",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "high top-down",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail"
+    },
+    {
+      "id": "torch",
+      "category": "environment",
+      "tier": "optional",
+      "method": "pixflux",
+      "nameKo": "횃불 (조명 포함)",
+      "prompt": "wall-mounted torch with glowing orange flame, side view",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail"
+    },
+    {
+      "id": "wood_barrel",
+      "category": "environment",
+      "tier": "optional",
+      "method": "pixflux",
+      "nameKo": "나무 통",
+      "prompt": "old wooden barrel with metal bands, side view",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail"
+    },
+    {
+      "id": "bone_pile",
+      "category": "environment",
+      "tier": "optional",
+      "method": "pixflux",
+      "nameKo": "매콜 뼈",
+      "prompt": "small pile of bones on the ground, top-down",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "high top-down",
+      "outline": "single color black outline",
+      "shading": "basic shading",
+      "detail": "medium detail"
+    },
+    {
+      "id": "cobweb",
+      "category": "environment",
+      "tier": "optional",
+      "method": "pixflux",
+      "nameKo": "거미줄",
+      "prompt": "torn spider web in a corner, side view, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "side",
+      "outline": "single color black outline",
+      "shading": "flat shading",
+      "detail": "low detail"
+    },
+    {
+      "id": "slime_trail",
+      "category": "environment",
+      "tier": "optional",
+      "method": "pixflux",
+      "nameKo": "슬라임 자국",
+      "prompt": "small green slime trail smear on the ground, top-down, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "high top-down",
+      "outline": "lineless",
+      "shading": "flat shading",
+      "detail": "low detail"
+    },
+    {
+      "id": "dust_pile",
+      "category": "environment",
+      "tier": "optional",
+      "method": "pixflux",
+      "nameKo": "먼지 더미",
+      "prompt": "small pile of gray dust and debris, top-down, plain background",
+      "size": {
+        "width": 16,
+        "height": 16
+      },
+      "view": "high top-down",
+      "outline": "single color black outline",
+      "shading": "flat shading",
+      "detail": "low detail"
+    }
+  ]
+}
