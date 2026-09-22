@@ -10,7 +10,8 @@
     "generate": "node generate.mjs",
     "recolor": "node recolor.mjs",
     "grime": "node grime.mjs",
-    "tile-variants": "node tile-variants.mjs"
+    "tile-variants": "node tile-variants.mjs",
+    "thicken": "node thicken-outline.mjs"
   },
   "dependencies": {
     "@pixellab-code/pixellab": "^1.0.2",
